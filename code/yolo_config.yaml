@@ -1,0 +1,7 @@
+names:
+- Crack
+- Other
+nc: 2
+path: /content/datasets/processed_dataset
+train: /content/datasets/processed_dataset/train
+val: /content/datasets/processed_dataset/val

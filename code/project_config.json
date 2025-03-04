@@ -1,0 +1,8 @@
+{
+    "device": "auto",
+    "original_classes": "auto",
+    "class_mapping": {
+        "Crack": ["D00", "D01", "D11", "D20"],
+        "Other": ["D40", "D43", "D44"]
+    }
+}
