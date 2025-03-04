@@ -10,20 +10,20 @@
 Вариации для "Class_mapping":
   "orig" - остаются оригинальные классы
   Для задания обобщенных классов используется словарь. Пример:
-  '''
+  ```
   "class_mapping": {
         "Crack": ["D00", "D01", "D11", "D20"],
         "Other": ["D40", "D43", "D44"]
     }
-  '''
+  ```
 
 yolo_config.yaml обновляется автоматически
 
 При запуске docker_run датасет и файл конфигкрации монтируются к образу. Датасет и файл конфигурации могут быть разные при каждом запуске
 
-'''
+```
 docker run --rm `
 >>     -v "path_to_dataset:/app/dataset:ro" `
 >>     -v "path_to_project_config.json:/app/project_config.json:ro" `
 >>     your_image_name
-'''
+```
