@@ -1,17 +1,26 @@
+import os
+import shutil
+import xml.etree.ElementTree as ET
+from sklearn.model_selection import train_test_split
+import argparse
+import json
+import torch
+import yaml
+from ultralytics import YOLO
 
 def check_cuda():
     """Проверка доступности CUDA"""
     if not torch.cuda.is_available():
-        print("CUDA недоступна, работаем на CPU.")
-        return "cpu"
+        print("CUDA недоступна.")
+        return False
 
     try:
         torch.zeros(1).cuda()
         print(f"Используется GPU: {torch.cuda.get_device_name(0)}")
-        return "cuda"
+        return True
     except Exception as e:
-        print(f"Ошибка использования CUDA: {e}. Переключаемся на CPU.")
-        return "cpu"
+        print(f"Ошибка использования CUDA: {e}.")
+        return False
     
 
 def load_project_config(config_file):
@@ -95,7 +104,7 @@ def update_yolo_config(config_path, class_mapping, original_classes, dataset_pat
 
 
 
-def convert_labels(labels_dir, class_list):
+def convert_labels_with_idx(labels_dir, class_list):
     """Заменяет имена классов на их индексы в YOLO label-файлах."""
     for filename in os.listdir(labels_dir):
         if filename.endswith(".txt"):
@@ -125,7 +134,7 @@ def convert_labels(labels_dir, class_list):
     print("Все labels успешно обновлены!")
 
 
-def update_yaml_config(config_path):
+def update_yaml_with_idx(config_path):
     """Обновляет yolo_config.yaml, заменяя имена классов на их индексы."""
     if not os.path.exists(config_path):
         print(f"Файл {config_path} не найден!")
@@ -147,4 +156,6 @@ def update_yaml_config(config_path):
         print("Файл yolo_config.yaml успешно обновлен!")
     else:
         print("Ошибка: 'names' не найден в yolo_config.yaml!")
+
+
 

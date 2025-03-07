@@ -1,13 +1,3 @@
-import os
-import shutil
-import xml.etree.ElementTree as ET
-from sklearn.model_selection import train_test_split
-import argparse
-import json
-import torch
-import yaml
-from ultralytics import YOLO
-
 from utils import *
 
 
@@ -96,11 +86,19 @@ else:
     print("Разделение на train и val завершено!")
 
 
-device = check_cuda() if config["device"] == "auto" else config["device"]
-if device == "cuda" and not torch.cuda.is_available():
-    print("CUDA недоступна! Переключаемся на CPU.")
-    device = "cpu"
 
+if config["device"] == "cpu":
+    device = "cpu"
+else:
+    cuda_status = check_cuda()
+    if config["device"] == "cuda" and not cuda_status:
+        raise RuntimeError(f"Cuda недоступна!")
+    if config["device"] == "auto" and not cuda_status:
+        device = "cpu"
+        print("Cuda недоступна, переключаемся на CPU")
+    else:
+        device = "cuda"
+    
 print(f"Используется устройство: {device}")
 
 # Обновляем yolo_config.yaml
@@ -116,9 +114,10 @@ with open(yolo_config_path, "r") as file:
 class_list = yaml_data.get("names", [])
 
 
-convert_labels(tr_labels_path, class_list)
-convert_labels(val_labels_path, class_list)
-update_yaml_config(yolo_config_path)
+if len(config["class_mapping"].keys()) != 2:  
+    convert_labels_with_idx(tr_labels_path, class_list)
+    convert_labels_with_idx(val_labels_path, class_list)
+    update_yaml_with_idx(yolo_config_path)
 
 
 

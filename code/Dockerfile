@@ -13,9 +13,6 @@ RUN apt-get update && apt-get install -y \
 
 # Устанавливаем зависимости Python
 WORKDIR /app
-#COPY requirements.txt .
-#COPY project_config.json /app/project_config.json
-#COPY /China_MotorBike /app/China_MotorBike
 COPY yolo_config.yaml .
 
 COPY rdd_yolo.py .
